@@ -42,6 +42,9 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.calendar.CalendarController;
 import com.android.calendar.CalendarController.EventInfo;
@@ -62,7 +65,7 @@ import ws.xsoh.etar.R;
 
 public class MonthByWeekFragment extends SimpleDayPickerFragment implements
         CalendarController.EventHandler, LoaderManager.LoaderCallbacks<Cursor>, OnScrollListener,
-        OnTouchListener {
+        OnTouchListener{
     private static final String TAG = "MonthFragment";
     private static final String TAG_EVENT_DIALOG = "event_dialog";
     // Selection and selection args for adding event queries
@@ -79,6 +82,10 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
     private static final int LOADER_THROTTLE_DELAY = 500;
     protected static boolean mShowDetailsInMonth = false;
     private final Time mDesiredDay = new Time();
+
+
+
+
     private final Runnable mTZUpdater = new Runnable() {
         @Override
         public void run() {
@@ -294,9 +301,68 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
         } else {
             v = inflater.inflate(R.layout.full_month_by_week, container, false);
         }
+
+        Button myButtonPrev = v.findViewById(R.id.prevmonth);
+        Button myButtonNext = v.findViewById(R.id.nextmonth);
+
+        myButtonPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentPosition = mListView.getFirstVisiblePosition();
+                currentPosition = currentPosition/2;
+
+                View itemV = mListView.getChildAt(0);
+
+                int topPosition = (itemV == null) ? 0 : itemV.getTop() - mListView.getPaddingTop();
+
+                mListView.scrollListBy((-1)*currentPosition);
+
+                currentPosition = mListView.getFirstVisiblePosition();
+
+                for(int i=0; i<mListView.getCount(); i++){
+                    Object item = mListView.getItemAtPosition(i);
+                    if(item == mFirstDayOfMonth){
+                        currentPosition = i;
+                    }
+                }
+                mListView.setSelection(currentPosition);
+            }
+        });
+
+        myButtonNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int currentPosition = mListView.getFirstVisiblePosition();
+                currentPosition = currentPosition/2;
+
+                View itemV = mListView.getChildAt(0);
+
+                int topPosition = (itemV == null) ? 0 : itemV.getTop() - mListView.getPaddingTop();
+
+                mListView.scrollListBy(currentPosition);
+
+                currentPosition = mListView.getFirstVisiblePosition();
+
+                for(int i=0; i<mListView.getCount(); i++){
+                    Object item = mListView.getItemAtPosition(i);
+                    if(item == mFirstDayOfMonth){
+                        currentPosition = i;
+                    }
+                }
+
+                mListView.setSelection(currentPosition);
+
+            }
+        });
+
         mDayNamesHeader = (ViewGroup) v.findViewById(R.id.day_names);
         return v;
     }
+
+
+
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -510,7 +576,11 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
         // TODO post a cleanup to push us back onto the grid if something went
         // wrong in a scroll such as the user stopping the view but not
         // scrolling
+
     }
 
-
 }
+
+
+
+

@@ -1911,6 +1911,9 @@ public class MonthWeekEventsView extends SimpleWeekView {
             mFadingIn = fadingIn;
         }
 
+
+
+
     }
 
 }

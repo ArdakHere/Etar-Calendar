@@ -57,7 +57,20 @@ public class MainActivity extends Activity
         mPhoneRetv.setPermissionsRequestItemClickedListener(this);
         mEmailRetv.setRecipientChipAddedListener(this);
         mEmailRetv.setRecipientChipDeletedListener(this);
+
+
+
+
     }
+
+    myButtonPrev.setOnClickListener(new View.OnClickListener() {
+         void onClick(View view);
+
+    });
+
+    myButtonNext.setOnClickListener(new View.OnClickListener() {
+        void onClick(View view);
+    });
 
     @Override
     public void onPermissionsRequestItemClicked(
@@ -80,4 +93,6 @@ public class MainActivity extends Activity
     public void onRecipientChipDeleted(RecipientEntry entry) {
         Log.i("ChipsSample", entry.getDisplayName() + " recipient chip removed");
     }
+
+
 }

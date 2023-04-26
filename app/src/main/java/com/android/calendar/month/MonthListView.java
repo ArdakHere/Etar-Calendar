@@ -18,15 +18,19 @@ package com.android.calendar.month;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.android.calendar.Utils;
 import com.android.calendarcommon2.Time;
+
+import ws.xsoh.etar.R;
 
 public class MonthListView extends ListView {
 
@@ -65,6 +69,8 @@ public class MonthListView extends ListView {
         super(context);
         init(context);
     }
+
+
 
     public MonthListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -156,14 +162,7 @@ public class MonthListView extends ListView {
             }
         }
 
-        public void prevMonth(View view){
 
-        }
-
-        public void nextMonthAction(View view)
-        {
-
-        }
 
         // Get the day at the top right corner
         int day = getUpperRightJulianDay();
@@ -191,6 +190,7 @@ public class MonthListView extends ListView {
                 + SimpleDayPickerFragment.LIST_TOP_OFFSET) : (topViewVisiblePart
                 - SimpleDayPickerFragment.LIST_TOP_OFFSET);
         // Fling
+
         smoothScrollBy(viewsToFling * firstViewHeight + offset, FLING_TIME);
     }
 
@@ -202,4 +202,8 @@ public class MonthListView extends ListView {
         }
         return child.getFirstJulianDay() + SimpleDayPickerFragment.DAYS_PER_WEEK - 1;
     }
+
+
+
+
 }

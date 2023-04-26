@@ -45,22 +45,22 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
     <Button
-        android:layout_width="100dp"
-        android:layout_height="48dp"
-        android:text="@string/prev_month"
-        android:textColor="@color/bg_black"
-        android:textSize="12sp"
+        android:id="@+id/prevmonth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&lt;"
+        android:textSize="25sp"
         android:onClick="goToPrevMonth"
         />
 
     <Button
+        android:id="@+id/nextmonth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:layout_marginTop="-48dp"
-        android:text="@string/next_month"
-        android:textColor="@color/bg_black"
-        android:textSize="12sp"
+        android:layout_marginTop="-53dp"
+        android:text="&gt;"
+        android:textSize="25sp"
         android:onClick="goToNextMonth"
         />
 
