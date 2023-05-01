@@ -318,36 +318,20 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
             public void onClick(View v) {
                 int currentPosition = mListView.getFirstVisiblePosition();
                 currentPosition = currentPosition/2;
-
                 mListView.scrollListBy((-1)*currentPosition);
-
                 currentPosition = mListView.getFirstVisiblePosition();
-
                 mListView.setSelection(currentPosition);
-
             }
         });
-
-
 
         myButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int currentPosition = mListView.getFirstVisiblePosition();
                 currentPosition = currentPosition/2;
-
-              //  mListView.scrollListBy(1500);
-
+                mListView.scrollListBy(currentPosition);
                 currentPosition = mListView.getFirstVisiblePosition();
-
                 mListView.setSelection(currentPosition);
-                if(mSelectedDay.getWeekNumber()==1){
-                    mListView.scrollListBy(500);
-                    mListView.setSelection(currentPosition);
-
-                }
-                //mListView.setSelection(currentPosition);
-
             }
         });
 

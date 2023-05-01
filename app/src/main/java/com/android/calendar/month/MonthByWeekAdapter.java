@@ -267,8 +267,6 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
             v.setLayoutParams(params);
             v.setClickable(true);
             v.setOnTouchListener(this);
-            Time weekTime = new Time(mHomeTimeZone);
-            View view = super.getView(position, convertView, parent);
 
             // Get the day of the week for the current position
             int selectedDay = -1;
@@ -277,14 +275,11 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
 
             }
 
-            int dayOfWeek = mSelectedDay.getWeekDay();
-
-            if (dayOfWeek == weekTime.SATURDAY) {
-                v.setBackgroundColor(setWeekendColor(Color.YELLOW));
-            } else if (dayOfWeek == weekTime.SUNDAY) {
-                v.setBackgroundColor(setWeekendColor(Color.YELLOW));
+            if (selectedDay == Calendar.SATURDAY) {
+                v.setBackgroundColor(setWeekendColor(Color.GREEN));
+            } else if (selectedDay == Calendar.SUNDAY) {
+                v.setBackgroundColor(setWeekendColor(Color.GREEN));
             }
-
 
             drawingParams.put(SimpleWeekView.VIEW_PARAMS_HEIGHT, parent.getHeight() / mNumWeeks);
             drawingParams.put(SimpleWeekView.VIEW_PARAMS_SELECTED_DAY, selectedDay);
@@ -294,6 +289,7 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
             drawingParams.put(SimpleWeekView.VIEW_PARAMS_WEEK, position);
             drawingParams.put(SimpleWeekView.VIEW_PARAMS_FOCUS_MONTH, mFocusMonth);
             drawingParams.put(MonthWeekEventsView.VIEW_PARAMS_ORIENTATION, mOrientation);
+
 
             if (isAnimatingToday) {
                 drawingParams.put(MonthWeekEventsView.VIEW_PARAMS_ANIMATE_TODAY, 1);
