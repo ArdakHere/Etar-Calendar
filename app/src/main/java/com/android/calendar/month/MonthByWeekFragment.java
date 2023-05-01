@@ -52,14 +52,18 @@ import com.android.calendar.CalendarController.EventType;
 import com.android.calendar.CalendarController.ViewType;
 import com.android.calendar.DynamicTheme;
 import com.android.calendar.Event;
+import com.android.calendar.LunarUtils;
 import com.android.calendar.Utils;
 import com.android.calendar.event.CreateEventDialogFragment;
 import com.android.calendarcommon2.Time;
 
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 
 import ws.xsoh.etar.R;
 
@@ -292,6 +296,8 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
         mAdapter.notifyDataSetChanged();
     }
 
+
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -302,6 +308,8 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
             v = inflater.inflate(R.layout.full_month_by_week, container, false);
         }
 
+
+
         Button myButtonPrev = v.findViewById(R.id.prevmonth);
         Button myButtonNext = v.findViewById(R.id.nextmonth);
 
@@ -311,53 +319,42 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
                 int currentPosition = mListView.getFirstVisiblePosition();
                 currentPosition = currentPosition/2;
 
-                View itemV = mListView.getChildAt(0);
-
-                int topPosition = (itemV == null) ? 0 : itemV.getTop() - mListView.getPaddingTop();
-
                 mListView.scrollListBy((-1)*currentPosition);
 
                 currentPosition = mListView.getFirstVisiblePosition();
 
-                for(int i=0; i<mListView.getCount(); i++){
-                    Object item = mListView.getItemAtPosition(i);
-                    if(item == mFirstDayOfMonth){
-                        currentPosition = i;
-                    }
-                }
                 mListView.setSelection(currentPosition);
+
             }
         });
+
+
 
         myButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 int currentPosition = mListView.getFirstVisiblePosition();
                 currentPosition = currentPosition/2;
 
-                View itemV = mListView.getChildAt(0);
-
-                int topPosition = (itemV == null) ? 0 : itemV.getTop() - mListView.getPaddingTop();
-
-                mListView.scrollListBy(currentPosition);
+              //  mListView.scrollListBy(1500);
 
                 currentPosition = mListView.getFirstVisiblePosition();
 
-                for(int i=0; i<mListView.getCount(); i++){
-                    Object item = mListView.getItemAtPosition(i);
-                    if(item == mFirstDayOfMonth){
-                        currentPosition = i;
-                    }
-                }
-
                 mListView.setSelection(currentPosition);
+                if(mSelectedDay.getWeekNumber()==1){
+                    mListView.scrollListBy(500);
+                    mListView.setSelection(currentPosition);
+
+                }
+                //mListView.setSelection(currentPosition);
 
             }
         });
 
+
         mDayNamesHeader = (ViewGroup) v.findViewById(R.id.day_names);
         return v;
+
     }
 
 

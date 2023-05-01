@@ -18,6 +18,7 @@ package com.android.calendar.month;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -37,6 +38,8 @@ import com.android.calendar.Utils;
 import com.android.calendarcommon2.Time;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import ws.xsoh.etar.R;
@@ -60,7 +63,9 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
     protected Time mTempTime;
     protected Time mToday;
     protected int mFirstJulianDay;
+    private int mWeekendColor = Color.GREEN;
     protected int mQueryDays;
+    private Date mMonthDisplayed;
     protected boolean mIsMiniMonth = true;
     protected int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
     protected ArrayList<ArrayList<Event>> mEventDayList = new ArrayList<ArrayList<Event>>();
@@ -103,6 +108,8 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
                 mSingleTapUpView = null;
             }
         }
+
+
     };
     long mClickTime;                        // Used to calculate minimum click animation time
     private boolean mAnimateToday = false;
@@ -120,6 +127,7 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
         mOnDownDelay = ViewConfiguration.getTapTimeout();
         mMovedPixelToCancel = vc.getScaledTouchSlop();
         mTotalClickDelay = mOnDownDelay + mOnTapDelay;
+
     }
 
     public void animateToday() {
@@ -212,73 +220,91 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
         refresh();
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (mIsMiniMonth) {
-            return super.getView(position, convertView, parent);
-        }
-        MonthWeekEventsView v;
-        LayoutParams params = new LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        HashMap<String, Integer> drawingParams = null;
-        boolean isAnimatingToday = false;
-        if (convertView != null) {
-            v = (MonthWeekEventsView) convertView;
-            // Checking updateToday uses the current params instead of the new
-            // params, so this is assuming the view is relatively stable
-            if (mAnimateToday && v.updateToday(mSelectedDay.getTimezone())) {
-                long currentTime = System.currentTimeMillis();
-                // If it's been too long since we tried to start the animation
-                // don't show it. This can happen if the user stops a scroll
-                // before reaching today.
-                if (currentTime - mAnimateTime > ANIMATE_TODAY_TIMEOUT) {
-                    mAnimateToday = false;
-                    mAnimateTime = 0;
-                } else {
-                    isAnimatingToday = true;
-                    // There is a bug that causes invalidates to not work some
-                    // of the time unless we recreate the view.
-                    v = new MonthWeekEventsView(mContext);
-               }
-            } else {
-                drawingParams = (HashMap<String, Integer>) v.getTag();
-            }
-        } else {
-            v = new MonthWeekEventsView(mContext);
-        }
-        if (drawingParams == null) {
-            drawingParams = new HashMap<String, Integer>();
-        }
-        drawingParams.clear();
 
-        v.setLayoutParams(params);
-        v.setClickable(true);
-        v.setOnTouchListener(this);
-
-        int selectedDay = -1;
-        if (mSelectedWeek == position) {
-            selectedDay = mSelectedDay.getWeekDay();
-        }
-
-        drawingParams.put(SimpleWeekView.VIEW_PARAMS_HEIGHT, parent.getHeight() / mNumWeeks);
-        drawingParams.put(SimpleWeekView.VIEW_PARAMS_SELECTED_DAY, selectedDay);
-        drawingParams.put(SimpleWeekView.VIEW_PARAMS_SHOW_WK_NUM, mShowWeekNumber ? 1 : 0);
-        drawingParams.put(SimpleWeekView.VIEW_PARAMS_WEEK_START, mFirstDayOfWeek);
-        drawingParams.put(SimpleWeekView.VIEW_PARAMS_NUM_DAYS, mDaysPerWeek);
-        drawingParams.put(SimpleWeekView.VIEW_PARAMS_WEEK, position);
-        drawingParams.put(SimpleWeekView.VIEW_PARAMS_FOCUS_MONTH, mFocusMonth);
-        drawingParams.put(MonthWeekEventsView.VIEW_PARAMS_ORIENTATION, mOrientation);
-
-        if (isAnimatingToday) {
-            drawingParams.put(MonthWeekEventsView.VIEW_PARAMS_ANIMATE_TODAY, 1);
-            mAnimateToday = false;
-        }
-
-        v.setWeekParams(drawingParams, mSelectedDay.getTimezone());
-        sendEventsToView(v);
-        return v;
+    public int setWeekendColor(int color) {
+        mWeekendColor = color;
+        return color;
     }
+    @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (mIsMiniMonth) {
+                return super.getView(position, convertView, parent);
+            }
+            MonthWeekEventsView v;
+            LayoutParams params = new LayoutParams(
+                    LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            HashMap<String, Integer> drawingParams = null;
+            boolean isAnimatingToday = false;
+            if (convertView != null) {
+                v = (MonthWeekEventsView) convertView;
+                // Checking updateToday uses the current params instead of the new
+                // params, so this is assuming the view is relatively stable
+                if (mAnimateToday && v.updateToday(mSelectedDay.getTimezone())) {
+                    long currentTime = System.currentTimeMillis();
+                    // If it's been too long since we tried to start the animation
+                    // don't show it. This can happen if the user stops a scroll
+                    // before reaching today.
+                    if (currentTime - mAnimateTime > ANIMATE_TODAY_TIMEOUT) {
+                        mAnimateToday = false;
+                        mAnimateTime = 0;
+                    } else {
+                        isAnimatingToday = true;
+                        // There is a bug that causes invalidates to not work some
+                        // of the time unless we recreate the view.
+                        v = new MonthWeekEventsView(mContext);
+                   }
+                } else {
+                    drawingParams = (HashMap<String, Integer>) v.getTag();
+                }
+            } else {
+                v = new MonthWeekEventsView(mContext);
+            }
+            if (drawingParams == null) {
+                drawingParams = new HashMap<String, Integer>();
+            }
+            drawingParams.clear();
+
+            v.setLayoutParams(params);
+            v.setClickable(true);
+            v.setOnTouchListener(this);
+            Time weekTime = new Time(mHomeTimeZone);
+            View view = super.getView(position, convertView, parent);
+
+            // Get the day of the week for the current position
+            int selectedDay = -1;
+            if (mSelectedWeek == position) {
+                selectedDay = mSelectedDay.getWeekDay();
+
+            }
+
+            int dayOfWeek = mSelectedDay.getWeekDay();
+
+            if (dayOfWeek == weekTime.SATURDAY) {
+                v.setBackgroundColor(setWeekendColor(Color.YELLOW));
+            } else if (dayOfWeek == weekTime.SUNDAY) {
+                v.setBackgroundColor(setWeekendColor(Color.YELLOW));
+            }
+
+
+            drawingParams.put(SimpleWeekView.VIEW_PARAMS_HEIGHT, parent.getHeight() / mNumWeeks);
+            drawingParams.put(SimpleWeekView.VIEW_PARAMS_SELECTED_DAY, selectedDay);
+            drawingParams.put(SimpleWeekView.VIEW_PARAMS_SHOW_WK_NUM, mShowWeekNumber ? 1 : 0);
+            drawingParams.put(SimpleWeekView.VIEW_PARAMS_WEEK_START, mFirstDayOfWeek);
+            drawingParams.put(SimpleWeekView.VIEW_PARAMS_NUM_DAYS, mDaysPerWeek);
+            drawingParams.put(SimpleWeekView.VIEW_PARAMS_WEEK, position);
+            drawingParams.put(SimpleWeekView.VIEW_PARAMS_FOCUS_MONTH, mFocusMonth);
+            drawingParams.put(MonthWeekEventsView.VIEW_PARAMS_ORIENTATION, mOrientation);
+
+            if (isAnimatingToday) {
+                drawingParams.put(MonthWeekEventsView.VIEW_PARAMS_ANIMATE_TODAY, 1);
+                mAnimateToday = false;
+            }
+
+            v.setWeekParams(drawingParams, mSelectedDay.getTimezone());
+            sendEventsToView(v);
+
+            return v;
+        }
 
     private void sendEventsToView(MonthWeekEventsView v) {
         if (mEventDayList.size() == 0) {
