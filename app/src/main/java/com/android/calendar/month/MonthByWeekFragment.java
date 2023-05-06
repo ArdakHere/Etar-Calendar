@@ -310,7 +310,30 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
 
 
 
+        Button myButtonPrev = v.findViewById(R.id.prevmonth);
+        Button myButtonNext = v.findViewById(R.id.nextmonth);
 
+        myButtonPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentPosition = mListView.getFirstVisiblePosition();
+                currentPosition = currentPosition/2;
+                mListView.scrollListBy((-1)*currentPosition);
+                currentPosition = mListView.getFirstVisiblePosition();
+                mListView.setSelection(currentPosition);
+            }
+        });
+
+        myButtonNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentPosition = mListView.getFirstVisiblePosition();
+                currentPosition = currentPosition/2;
+                mListView.scrollListBy(currentPosition);
+                currentPosition = mListView.getFirstVisiblePosition();
+                mListView.setSelection(currentPosition);
+            }
+        });
 
 
         mDayNamesHeader = (ViewGroup) v.findViewById(R.id.day_names);
