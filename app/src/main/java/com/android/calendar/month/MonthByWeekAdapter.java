@@ -220,11 +220,6 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
         refresh();
     }
 
-
-    public int setWeekendColor(int color) {
-        mWeekendColor = color;
-        return color;
-    }
     @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (mIsMiniMonth) {
@@ -275,11 +270,6 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
 
             }
 
-            if (selectedDay == Calendar.SATURDAY) {
-                v.setBackgroundColor(setWeekendColor(Color.GREEN));
-            } else if (selectedDay == Calendar.SUNDAY) {
-                v.setBackgroundColor(setWeekendColor(Color.GREEN));
-            }
 
             drawingParams.put(SimpleWeekView.VIEW_PARAMS_HEIGHT, parent.getHeight() / mNumWeeks);
             drawingParams.put(SimpleWeekView.VIEW_PARAMS_SELECTED_DAY, selectedDay);
